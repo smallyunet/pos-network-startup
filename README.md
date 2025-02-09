@@ -14,7 +14,7 @@ This project provides a streamlined process for setting up an Ethereum Proof of 
 Clone this repository to get started:
 
 ```
-git clone https://github.com/lyfsn/pos-network-startup.git
+git clone https://github.com/smallyunet/pos-network-startup.git
 ```
 
 After cloning, navigate to the project's root directory.
