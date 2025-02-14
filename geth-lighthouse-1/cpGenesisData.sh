@@ -1,7 +1,7 @@
 
 
-rm -rvf el-cl-genesis-data
+rm -rvf network-config
 
-cp -R ../genesis-data/el-cl-genesis-data .
+cp -R ../genesis-generator/network-config .
 
 

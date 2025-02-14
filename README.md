@@ -21,50 +21,72 @@ After cloning, navigate to the project's root directory.
 
 ## Setup
 
-Use the `initAndStart.sh` script when setting up the network for the first time. Execute it by running:
+### Initial Setup
+
+To set up the network for the first time, run the `init.sh` script:
 
 ```
-./initAndStart.sh
+./init.sh
 ```
 
 This script performs the following tasks:
 
-1. Prepares the genesis data in ./genesis-data.
+1. Prepares the genesis data in `./genesis-data`.
 2. Clears any existing data and sets up the initial environment.
-3. Initializes and launches the Geth execution client and the Lighthouse consensus client in geth-lighthouse-1.
-4. Starts the Dora service located in the dora directory.
-5. Launches a local browser service on port 9777 to view node status. [http://localhost:9777](http://localhost:9777)
+3. Initializes the Geth execution client and the Lighthouse consensus client.
 
-To restart the network after a stop without reinitializing, use the `start.sh` script:
+### Starting the Network
+
+To start the network after initialization, use the `start.sh` script:
 
 ```
 ./start.sh
 ```
 
-This will launch the network components without resetting the genesis data or clearing the existing data.
 
-To stop the network, use the `down.sh` script:
+This script launches the following components:
+
+- Geth execution client
+- Lighthouse consensus client
+- Dora service (located in the `dora` directory)
+- A local browser service on port 9777 to monitor node status
+
+You can access the node status at [http://localhost:9777](http://localhost:9777).
+
+### Stopping the Network
+
+To stop the network, use the `stop.sh` script:
 
 ```
-./down.sh
+./stop.sh
 ```
 
-This script will shut down all network components.
+This will shut down all running network components.
+
+### Clearing Network Data
+
+If you want to reset the network and remove all data, use the `clear.sh` script:
+
+```
+./clear.sh
+```
+
+This will delete all existing network data, allowing you to start fresh with `init.sh`.
 
 ## Usage
 
-After running the `initAndStart.sh` or `start.sh` script, depending on whether it's the initial setup or a restart, your Ethereum PoS network will be up and running. The network components include:
+After running `init.sh` (for initial setup) or `start.sh` (to restart the network), your Ethereum PoS network will be fully operational. The network includes:
 
-- Geth available on ports 8545 (HTTP) and 8546 (WebSocket).
-- Lighthouse Beacon node on port 5052, with the validator client on port 5062.
-- A local browser service on port 9777 to monitor node status.
-- Additional configurations and ports as detailed in the Docker Compose files. Refer to the geth-lighthouse-1 directory for more on the network configuration.
+- **Geth Execution Client** (Ports: `8545` for HTTP, `8546` for WebSocket)
+- **Lighthouse Beacon Node** (Port: `5052`), **Validator Client** (Port: `5062`)
+- **Dora Monitoring Service** (Port: `9777` for web-based monitoring)
+- Additional configurations and ports as specified in the Docker Compose files. Refer to the `geth-lighthouse-1` directory for details.
 
 ## Contributing
 
-Contributions are welcome. Please adhere to the following steps:
+Contributions are welcome. Please follow these steps:
 
-- Fork the repository.
-- Create a new branch for your feature.
-- Commit and push your changes.
-- Submit a pull request with a detailed description.
+1. Fork the repository.
+2. Create a new branch for your feature.
+3. Commit and push your changes.
+4. Submit a pull request with a detailed description.

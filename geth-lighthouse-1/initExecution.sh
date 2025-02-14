@@ -1,13 +1,11 @@
 
-
 docker run \
   --rm \
   -it \
   -v $(pwd)/execution-data:/execution-data \
-  -v $(pwd)/el-cl-genesis-data:/el-cl-genesis-data \
-  ethereum/client-go:v1.13.4 \
+  -v $(pwd)/network-config:/network-config \
+  ethereum/client-go:v1.15.0 \
   --state.scheme=path \
   --datadir=/execution-data \
   init \
-  /el-cl-genesis-data/custom_config_data/genesis.json
-
+  /network-config/metadata/genesis.json

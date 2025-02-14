@@ -1,63 +1,113 @@
-
 logging:
-  outputLevel: "info"
+  #outputLevel: "debug"
+  #outputStderr: false
+
+  #filePath: "explorer.log"
+  #fileLevel: "warn"
 
 # Chain network configuration
 chain:
-  name: "endurance-localnet"
-  configPath: "/el-cl-genesis-data/custom_config_data/config.yaml"
-  displayName: "Endurance 2.0 Localtnet"
+  #name: "mainnet"
+  #genesisTimestamp: 1690484700
+  #genesisValidatorsRoot: "0xbf3c3d4683a5a4d286cd2a5ef7a5c1702f649eee82cdc7e87e05030102d12ccf"
+  configPath: "/config/config.yaml"
+  #genesisTimestamp: 1688126460
+  #configPath: "config-devnet7.yaml"
+  displayName: "Oiia Network"
 
 # HTTP Server configuration
 server:
   host: "0.0.0.0" # Address to listen on
   port: "8080" # Port to listen on
 
+
 frontend:
   enabled: true # Enable or disable to web frontend
   debug: false
-  minimize: false # minimize html templates
-
-  # Name of the site, displayed in the title tag
-  siteName: "Dora the Explorer"
-  siteSubtitle: "Kurtosis Testnet"
-
-  # link to EL Explorer
+  minimize: false
+  siteName: "Oiia Network" # Name of the site, displayed in the title tag
+  siteSubtitle: "Mainnet"
+  siteDomain: "dora.oiia.network"
   ethExplorerLink: ""
+  validatorNamesYaml: "/config/validator_names.yaml"
+  #validatorNamesInventory: "https://config.4844-devnet-7.ethpandaops.io/api/v1/nodes/validator-ranges"
+  showSensitivePeerInfos: true
+  showPeerDASInfos: true
+  showSubmitDeposit: true
+  showSubmitElRequests: true
 
-  # file or inventory url to load validator names from
-  validatorNamesYaml: "/validator-ranges/validator-ranges.yaml"
-
+  
 beaconapi:
-  # CL Client RPC
+  # beacon node rpc endpoints
   endpoints:
-
-    - url: "http://host.docker.internal:5052"
-      name: "geth-lighthouse-1"
+    - name: "lighthouse"
+      url: "http://host.docker.internal:5052"
+      priority: 4
       archive: true
-
-  # local cache for page models
-  localCacheSize: 10 # 10MB
-
-  # remote cache for page models
+  
+  localCacheSize: 100 # 100MB
   redisCacheAddr: ""
   redisCachePrefix: ""
 
-# indexer keeps track of the latest epochs in memory.
+executionapi:
+  # execution node rpc endpoints
+  endpoints:
+    - name: "geth"
+      url: "http://host.docker.internal:8545"
+  
+  logBatchSize: 1000
+  depositDeployBlock: 0 # el block number from where to crawl the deposit contract (should be <=, but close to the deposit contract deployment block)
+  electraDeployBlock: 0 # el block number from where to crawl the electra system contracts (should be <=, but close to electra fork activation block)
+
 indexer:
   # max number of epochs to keep in memory
-  inMemoryEpochs: 8
+  inMemoryEpochs: 3
 
-  # number of epochs to wait before storing unfinalized blocks to db
-  cachePersistenceDelay: 8
+  # number of epochs to keep validator activity history for (high memory usage for large validator sets)
+  activityHistoryLength: 6
 
-  # disable synchronizing and everything that writes to the db (indexer just maintains local cache)
-  disableIndexWriter: false
+  # disable synchronizing historic data
+  disableSynchronizer: false
 
-  # number of seconds to wait between each epoch (don't overload CL client)
-  syncEpochCooldown: 1
+  # reset synchronization state to this epoch on startup - only use to resync database, comment out afterwards
+  #resyncFromEpoch: 0
 
+  # force re-synchronization of epochs that are already present in DB - only use to fix missing data after schema upgrades
+  #resyncForceUpdate: true
+
+  # number of seconds to pause the synchronization between each epoch (don't overload CL client)
+  syncEpochCooldown: 2
+
+  # maximum number of parallel beacon state requests (might cause high memory usage)
+  maxParallelValidatorSetRequests: 1
+
+mevIndexer:
+  # list of mev relays to crawl mev blocks from
+  relays:
+    # - index: 0  # identifier for this relay in db (0-63)
+    #   name: Flashbots
+    #   url: https://boost-relay.flashbots.net/
+  refreshInterval: 10m
+
+# database configuration
 database:
-  engine: "sqlite"
+  engine: "sqlite" # sqlite / pgsql
+
+  # sqlite settings (only used if engine is set to sqlite)
   sqlite:
-    file: "/dora-database.sqlite"
+    file: "./tmp-database.sqlite"
+    #file: ":memory:"
+
+  # pgsql settings (only used if engine is set to pgsql)
+  pgsql:
+    host: "10.16.97.2"
+    port: 5432
+    user: "pk910"
+    password: "SBekcBFpRW9rZrVL" # internal dev DB, no worries about password leaking ;)
+    name: "pk910"
+  pgsqlWriter:
+    host: "10.16.97.2"
+    port: 5432
+    user: "pk910"
+    password: "SBekcBFpRW9rZrVL" # internal dev DB, no worries about password leaking ;)
+    name: "pk910"

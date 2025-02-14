@@ -4,9 +4,7 @@ docker run \
   --restart unless-stopped \
   --name=dora-explorer \
   -v $(pwd):/config \
-  -v $(pwd)/el-cl-genesis-data:/el-cl-genesis-data \
+  -v $(pwd)/network-config:/network-config \
   -p 9777:8080 \
-  -it pk910/dora-the-explorer:latest \
+  -it ethpandaops/dora:v1.13.2 \
   -config=/config/config.yaml
-
-
